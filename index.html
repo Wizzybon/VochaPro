@@ -3,1145 +3,952 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WIZZYBON ROUTER - Admin</title>
+<title>VochaPro - WiFi Hotspot</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-*{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
-    font-family:Arial,sans-serif;
-}
-
+*{box-sizing:border-box}
 body{
-    background:#f4f6f9;
-    color:#172033;
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#f4f7f6;
+    color:#17201d;
 }
-
-/* LOGIN */
-#loginPage{
-    min-height:100vh;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:#111827;
-    padding:20px;
-}
-
-.login-box{
-    width:100%;
-    max-width:400px;
-    background:white;
-    padding:35px;
-    border-radius:15px;
-    box-shadow:0 10px 40px rgba(0,0,0,.3);
-}
-
-.login-logo{
-    text-align:center;
-    font-size:25px;
-    font-weight:bold;
-    margin-bottom:8px;
-}
-
-.login-logo span{
-    color:#16a34a;
-}
-
-.login-subtitle{
-    text-align:center;
-    color:#777;
-    margin-bottom:25px;
-}
-
-.form-group{
-    margin-bottom:16px;
-}
-
-.form-group label{
-    display:block;
-    margin-bottom:7px;
-    font-weight:bold;
-}
-
-input,select{
-    width:100%;
-    padding:12px;
-    border:1px solid #ddd;
-    border-radius:8px;
-    outline:none;
-}
-
-input:focus,select:focus{
-    border-color:#16a34a;
-}
-
-.login-btn{
-    width:100%;
-    background:#16a34a;
+header{
+    background:#087f5b;
     color:white;
-    border:0;
-    padding:13px;
-    border-radius:8px;
-    font-weight:bold;
-    cursor:pointer;
-}
-
-.error{
-    color:#dc2626;
-    text-align:center;
-    margin-top:12px;
-}
-
-/* APP */
-#app{
-    display:none;
-}
-
-.sidebar{
-    position:fixed;
-    left:0;
-    top:0;
-    width:245px;
-    height:100vh;
-    background:#111827;
-    color:white;
-    padding:25px 15px;
-}
-
-.logo{
-    text-align:center;
-    font-size:22px;
-    font-weight:bold;
-    margin-bottom:35px;
-}
-
-.logo span{
-    color:#22c55e;
-}
-
-.menu{
-    list-style:none;
-}
-
-.menu li{
-    padding:13px;
-    margin:6px 0;
-    border-radius:8px;
-    cursor:pointer;
-}
-
-.menu li:hover,
-.menu li.active{
-    background:#16a34a;
-}
-
-.logout{
-    margin-top:30px;
-    background:#dc2626 !important;
-}
-
-.main{
-    margin-left:245px;
-    padding:25px;
-}
-
-.topbar{
+    padding:18px 25px;
     display:flex;
     justify-content:space-between;
     align-items:center;
-    margin-bottom:25px;
 }
-
-.admin{
-    background:white;
-    padding:10px 15px;
-    border-radius:8px;
+.logo{
+    font-size:25px;
+    font-weight:bold;
 }
-
-.cards{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:18px;
+.container{
+    max-width:1100px;
+    margin:30px auto;
+    padding:20px;
 }
-
 .card{
     background:white;
-    padding:20px;
-    border-radius:12px;
-    box-shadow:0 3px 12px rgba(0,0,0,.06);
+    border-radius:14px;
+    padding:25px;
+    margin-bottom:20px;
+    box-shadow:0 4px 15px rgba(0,0,0,.08);
 }
-
-.card h3{
-    color:#6b7280;
-    font-size:14px;
-    margin-bottom:10px;
+.auth-box{
+    max-width:450px;
+    margin:50px auto;
 }
-
-.card h2{
-    font-size:25px;
+input,select{
+    width:100%;
+    padding:13px;
+    margin:8px 0 14px;
+    border:1px solid #ddd;
+    border-radius:8px;
+    font-size:15px;
 }
-
-.blue{color:#2563eb}
-.green{color:#16a34a}
-.orange{color:#ea580c}
-.red{color:#dc2626}
-
-.section{
-    background:white;
-    margin-top:25px;
-    padding:22px;
-    border-radius:12px;
-    box-shadow:0 3px 12px rgba(0,0,0,.06);
-}
-
-.section h2{
-    margin-bottom:18px;
-}
-
-.grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:20px;
-}
-
 button{
     border:0;
-    padding:11px 18px;
-    border-radius:7px;
+    padding:12px 18px;
+    border-radius:8px;
     cursor:pointer;
     font-weight:bold;
 }
-
-.btn-green{
-    background:#16a34a;
+.btn{
+    background:#087f5b;
     color:white;
 }
-
-.btn-blue{
-    background:#2563eb;
+.btn-danger{
+    background:#dc3545;
     color:white;
 }
-
-.btn-red{
-    background:#dc2626;
-    color:white;
+.btn-secondary{
+    background:#e9ecef;
 }
-
-.packages{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:15px;
+.tabs{
+    display:flex;
+    gap:10px;
+    margin-bottom:20px;
 }
-
-.package{
-    border:1px solid #e5e7eb;
-    padding:18px;
-    border-radius:10px;
+.tabs button{
+    flex:1;
 }
-
-.package h3{
-    margin-bottom:8px;
+.hidden{
+    display:none!important;
 }
-
-.price{
-    color:#16a34a;
-    font-size:23px;
-    font-weight:bold;
-    margin:10px 0;
-}
-
-table{
-    width:100%;
-    border-collapse:collapse;
-}
-
-th,td{
+.message{
     padding:12px;
-    text-align:left;
-    border-bottom:1px solid #eee;
+    border-radius:8px;
+    margin:10px 0;
+    background:#e9f7ef;
+    color:#146c43;
 }
-
-th{
-    background:#f8fafc;
+.error{
+    background:#fdeaea;
+    color:#a61b1b;
 }
-
-.status{
-    padding:5px 9px;
-    border-radius:20px;
-    font-size:12px;
-    background:#dcfce7;
-    color:#15803d;
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:18px;
 }
-
-.delete{
-    background:#fee2e2;
-    color:#b91c1c;
-    padding:7px 10px;
+.package{
+    border:1px solid #ddd;
+    border-radius:12px;
+    padding:18px;
 }
-
-.mobile-menu{
-    display:none;
+.price{
+    font-size:24px;
+    font-weight:bold;
+    color:#087f5b;
 }
-
-@media(max-width:900px){
-
-    .cards{
-        grid-template-columns:1fr 1fr;
-    }
-
-    .packages{
-        grid-template-columns:1fr;
-    }
-
-    .grid{
-        grid-template-columns:1fr;
-    }
+.stat{
+    padding:20px;
+    border-radius:12px;
+    background:#f0f8f5;
 }
-
-@media(max-width:650px){
-
-    .sidebar{
-        display:none;
-    }
-
-    .main{
-        margin-left:0;
-        padding:15px;
-    }
-
-    .mobile-menu{
-        display:block;
-        background:#111827;
-        color:white;
-        margin-bottom:15px;
-    }
-
-    .cards{
-        grid-template-columns:1fr 1fr;
-        gap:10px;
-    }
-
-    .card{
-        padding:15px;
-    }
-
-    .card h2{
-        font-size:20px;
-    }
-
-    table{
-        font-size:12px;
-    }
-
-    th,td{
-        padding:8px 5px;
-    }
+.stat h2{
+    margin:0;
+}
+.small{
+    color:#666;
+    font-size:14px;
 }
 </style>
 </head>
 
 <body>
 
-<!-- ================= LOGIN ================= -->
+<header>
+    <div class="logo">📶 VochaPro</div>
+    <button id="logoutBtn" class="btn-danger hidden" onclick="logout()">Logout</button>
+</header>
 
-<div id="loginPage">
+<div class="container">
 
-<div class="login-box">
+<!-- AUTH -->
+<section id="authSection">
 
-<div class="login-logo">
-WIZZYBON <span>ROUTER</span>
+<div class="card auth-box">
+
+<h2 id="authTitle">Customer Login</h2>
+
+<div class="tabs">
+    <button class="btn" onclick="showLogin()">Login</button>
+    <button class="btn-secondary" onclick="showSignup()">Sign Up</button>
 </div>
 
-<div class="login-subtitle">
-Admin Management System
-</div>
+<div id="message"></div>
 
-<form onsubmit="login(event)">
+<!-- LOGIN -->
+<div id="loginForm">
 
-<div class="form-group">
-<label>Username</label>
-<input
-type="text"
-id="username"
-placeholder="Enter username"
-required>
-</div>
+<label>Email</label>
+<input type="email" id="loginEmail" placeholder="Email yako">
 
-<div class="form-group">
 <label>Password</label>
-<input
-type="password"
-id="password"
-placeholder="Enter password"
-required>
-</div>
+<input type="password" id="loginPassword" placeholder="Password">
 
-<button class="login-btn">
-LOGIN
+<button class="btn" style="width:100%" onclick="login()">
+Login
 </button>
 
-<div id="loginError" class="error"></div>
-
-</form>
-
-</div>
+<p class="small">
+Tumia email na password uliyojisajili.
+</p>
 
 </div>
 
+<!-- SIGNUP -->
+<div id="signupForm" class="hidden">
 
-<!-- ================= APP ================= -->
+<label>Jina kamili</label>
+<input type="text" id="signupName" placeholder="Jina lako">
 
-<div id="app">
+<label>Namba ya simu</label>
+<input type="text" id="signupPhone" placeholder="+255...">
 
-<!-- SIDEBAR -->
+<label>Email</label>
+<input type="email" id="signupEmail" placeholder="Email yako">
 
-<div class="sidebar">
+<label>Password</label>
+<input type="password" id="signupPassword" placeholder="Password">
 
-<div class="logo">
-WIZZYBON <span>ROUTER</span>
-</div>
-
-<ul class="menu">
-
-<li class="active">📊 Dashboard</li>
-
-<li>👥 Customers</li>
-
-<li>🎟️ Vouchers</li>
-
-<li>📶 Packages</li>
-
-<li>💰 Payments</li>
-
-<li>📡 MikroTik</li>
-
-<li>⚙️ Settings</li>
-
-<li class="logout" onclick="logout()">
-🚪 Logout
-</li>
-
-</ul>
-
-</div>
-
-
-<!-- MAIN -->
-
-<div class="main">
-
-<button class="mobile-menu">
-☰ Menu
+<button class="btn" style="width:100%" onclick="signup()">
+Create Account
 </button>
 
-<div class="topbar">
-
-<h1>Dashboard</h1>
-
-<div class="admin">
-👤 Admin
-</div>
+<p class="small">
+Baada ya kujisajili unaweza kuhitajika kuthibitisha email yako.
+</p>
 
 </div>
 
+</div>
+</section>
 
-<!-- STATISTICS -->
 
-<div class="cards">
+<!-- CUSTOMER DASHBOARD -->
+<section id="customerDashboard" class="hidden">
 
 <div class="card">
-<h3>Customers</h3>
-<h2 class="blue" id="customerCount">248</h2>
+<h1>Karibu VochaPro 👋</h1>
+<p id="customerName"></p>
 </div>
 
 <div class="card">
-<h3>Active Vouchers</h3>
-<h2 class="green" id="voucherCount">0</h2>
+<h2>📦 WiFi Packages</h2>
+<div id="packagesList" class="grid"></div>
 </div>
 
 <div class="card">
-<h3>Packages</h3>
-<h2 class="orange" id="packageCount">0</h2>
+<h2>🎟️ Vouchers Zangu</h2>
+<div id="vouchersList"></div>
 </div>
+
+</section>
+
+
+<!-- ADMIN DASHBOARD -->
+<section id="adminDashboard" class="hidden">
 
 <div class="card">
-<h3>Revenue</h3>
-<h2 class="green" id="revenue">TZS 0</h2>
+<h1>Admin Dashboard 👨‍💼</h1>
+<p>Karibu kwenye usimamizi wa VochaPro.</p>
 </div>
-
-</div>
-
-
-<!-- ADD PACKAGE -->
-
-<div class="section">
-
-<h2>📶 Add New WiFi Package</h2>
 
 <div class="grid">
 
-<div>
+<div class="stat">
+<p>Customers</p>
+<h2 id="customerCount">0</h2>
+</div>
 
-<div class="form-group">
+<div class="stat">
+<p>Packages</p>
+<h2 id="packageCount">0</h2>
+</div>
+
+<div class="stat">
+<p>Vouchers</p>
+<h2 id="voucherCount">0</h2>
+</div>
+
+<div class="stat">
+<p>Payments</p>
+<h2 id="paymentCount">0</h2>
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>➕ Add WiFi Package</h2>
+
 <label>Package Name</label>
+<input id="packageName" placeholder="Mfano: Daily 1GB">
 
-<input
-type="text"
-id="packageName"
-placeholder="Example: Daily">
-</div>
-
-<div class="form-group">
-<label>Duration</label>
-
-<input
-type="number"
-id="packageDuration"
-placeholder="Example: 24">
-</div>
-
-</div>
-
-
-<div>
-
-<div class="form-group">
-<label>Duration Unit</label>
-
-<select id="packageUnit">
-
-<option value="Hours">
-Hours
-</option>
-
-<option value="Days">
-Days
-</option>
-
-<option value="Weeks">
-Weeks
-</option>
-
-<option value="Months">
-Months
-</option>
-
-</select>
-
-</div>
-
-
-<div class="form-group">
+<label>Duration (minutes)</label>
+<input id="packageDuration" type="number" placeholder="1440">
 
 <label>Price (TZS)</label>
+<input id="packagePrice" type="number" placeholder="1000">
 
-<input
-type="number"
-id="packagePrice"
-placeholder="Example: 1000">
+<label>Description</label>
+<input id="packageDescription" placeholder="Maelezo ya package">
 
-</div>
-
-<button
-class="btn-green"
-onclick="addPackage()">
-
-+ Add Package
-
+<button class="btn" onclick="addPackage()">
+Add Package
 </button>
 
 </div>
 
-</div>
+<div class="card">
+
+<h2>📦 Existing Packages</h2>
+<div id="adminPackages"></div>
 
 </div>
 
-
-<!-- PACKAGES -->
-
-<div class="section">
-
-<h2>📦 Available Packages</h2>
-
-<div
-class="packages"
-id="packagesList">
-
-</div>
-
-</div>
-
-
-<!-- GENERATE VOUCHERS -->
-
-<div class="section">
-
-<h2>🎟️ Generate Vouchers</h2>
-
-<div class="grid">
-
-<div class="form-group">
-
-<label>Select Package</label>
-
-<select id="voucherPackage">
-
-</select>
-
-</div>
-
-<div class="form-group">
-
-<label>Number of Vouchers</label>
-
-<input
-type="number"
-id="voucherAmount"
-value="1"
-min="1"
-max="100">
-
-</div>
-
-</div>
-
-<button
-class="btn-blue"
-onclick="generateVouchers()">
-
-Generate Vouchers
-
-</button>
-
-</div>
-
-
-<!-- VOUCHER TABLE -->
-
-<div class="section">
-
-<h2>🎟️ Voucher List</h2>
-
-<table>
-
-<thead>
-
-<tr>
-
-<th>Voucher</th>
-<th>Package</th>
-<th>Price</th>
-<th>Status</th>
-<th>Action</th>
-
-</tr>
-
-</thead>
-
-<tbody id="voucherTable">
-
-</tbody>
-
-</table>
-
-</div>
-
-</div>
+</section>
 
 </div>
 
 
 <script>
 
-/* ================= LOGIN ================= */
+/* =========================================
+   SUPABASE CONFIGURATION
+   ========================================= */
 
-function login(event){
+const SUPABASE_URL =
+"https://sdnhqaujegtxtgvurxbs.supabase.co";
 
-event.preventDefault();
+/*
+   WEKA PUBLISHABLE KEY YAKO HAPA.
+   Usitumie Secret Key.
+*/
+const SUPABASE_PUBLISHABLE_KEY =
+"sb_publishable_N9Z1K-rfH6pCp1XvEVhjcg_fokZl4qu";
 
-const username =
-document.getElementById("username").value;
-
-const password =
-document.getElementById("password").value;
-
-if(
-username === "admin" &&
-password === "admin123"
-){
-
-localStorage.setItem(
-"wizzybonLoggedIn",
-"true"
+const supabaseClient =
+supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
 );
 
-showApp();
 
-}else{
+/* =========================================
+   UI FUNCTIONS
+   ========================================= */
 
-document.getElementById(
-"loginError"
-).textContent =
-"Username au password sio sahihi.";
+function showMessage(text,error=false){
+    const box=document.getElementById("message");
+    box.innerText=text;
+    box.className=error ? "message error" : "message";
+}
+
+function showLogin(){
+    document.getElementById("loginForm").classList.remove("hidden");
+    document.getElementById("signupForm").classList.add("hidden");
+    document.getElementById("authTitle").innerText="Customer Login";
+    showMessage("");
+}
+
+function showSignup(){
+    document.getElementById("loginForm").classList.add("hidden");
+    document.getElementById("signupForm").classList.remove("hidden");
+    document.getElementById("authTitle").innerText="Create Customer Account";
+    showMessage("");
+}
+
+
+/* =========================================
+   SIGN UP
+   ========================================= */
+
+async function signup(){
+
+    const full_name =
+        document.getElementById("signupName").value.trim();
+
+    const phone =
+        document.getElementById("signupPhone").value.trim();
+
+    const email =
+        document.getElementById("signupEmail").value.trim();
+
+    const password =
+        document.getElementById("signupPassword").value;
+
+    if(!full_name || !email || !password){
+
+        showMessage(
+            "Jaza jina, email na password.",
+            true
+        );
+
+        return;
+    }
+
+    if(password.length < 6){
+
+        showMessage(
+            "Password iwe na angalau characters 6.",
+            true
+        );
+
+        return;
+    }
+
+    const {data,error} =
+        await supabaseClient.auth.signUp({
+
+            email:email,
+            password:password,
+
+            options:{
+                data:{
+                    full_name:full_name,
+                    phone:phone
+                }
+            }
+
+        });
+
+    if(error){
+
+        showMessage(error.message,true);
+        return;
+    }
+
+    showMessage(
+        "Account imeundwa! Angalia email yako kuthibitisha account."
+    );
+
+    document.getElementById("signupName").value="";
+    document.getElementById("signupPhone").value="";
+    document.getElementById("signupEmail").value="";
+    document.getElementById("signupPassword").value="";
+}
+
+
+/* =========================================
+   LOGIN
+   ========================================= */
+
+async function login(){
+
+    const email =
+        document.getElementById("loginEmail").value.trim();
+
+    const password =
+        document.getElementById("loginPassword").value;
+
+    if(!email || !password){
+
+        showMessage(
+            "Weka email na password.",
+            true
+        );
+
+        return;
+    }
+
+    const {data,error} =
+        await supabaseClient.auth.signInWithPassword({
+
+            email:email,
+            password:password
+
+        });
+
+    if(error){
+
+        showMessage(error.message,true);
+        return;
+    }
+
+    await loadUser();
 
 }
 
+
+/* =========================================
+   CHECK USER
+   ========================================= */
+
+async function loadUser(){
+
+    const {data} =
+        await supabaseClient.auth.getUser();
+
+    const user=data.user;
+
+    if(!user){
+
+        showAuth();
+        return;
+    }
+
+    document
+        .getElementById("logoutBtn")
+        .classList.remove("hidden");
+
+    const {data:profile,error} =
+        await supabaseClient
+        .from("profiles")
+        .select("*")
+        .eq("id",user.id)
+        .single();
+
+    if(error){
+
+        console.error(error);
+
+        showMessage(
+            "Account ipo lakini profile haijasomeka.",
+            true
+        );
+
+        return;
+    }
+
+    document
+        .getElementById("authSection")
+        .classList.add("hidden");
+
+    if(profile.role==="admin"){
+
+        showAdminDashboard();
+
+    }else{
+
+        showCustomerDashboard(profile);
+
+    }
+
 }
 
 
-/* ================= LOGOUT ================= */
+/* =========================================
+   CUSTOMER DASHBOARD
+   ========================================= */
 
-function logout(){
+async function showCustomerDashboard(profile){
 
-localStorage.removeItem(
-"wizzybonLoggedIn"
+    document
+        .getElementById("customerDashboard")
+        .classList.remove("hidden");
+
+    document
+        .getElementById("adminDashboard")
+        .classList.add("hidden");
+
+    document
+        .getElementById("customerName")
+        .innerText =
+        "Jina: " +
+        (profile.full_name || "Customer");
+
+    await loadPackages();
+    await loadVouchers();
+}
+
+
+async function loadPackages(){
+
+    const {data,error} =
+        await supabaseClient
+        .from("packages")
+        .select("*")
+        .eq("is_active",true)
+        .order("price",{ascending:true});
+
+    const box=
+        document.getElementById("packagesList");
+
+    if(error){
+
+        box.innerHTML=
+            "<p>Imeshindikana kupakia packages.</p>";
+
+        return;
+    }
+
+    if(!data || data.length===0){
+
+        box.innerHTML=
+            "<p>Hakuna WiFi packages bado.</p>";
+
+        return;
+    }
+
+    box.innerHTML="";
+
+    data.forEach(pkg=>{
+
+        const div=document.createElement("div");
+
+        div.className="package";
+
+        div.innerHTML=`
+
+            <h3>${escapeHtml(pkg.name)}</h3>
+
+            <p class="price">
+                TZS ${Number(pkg.price).toLocaleString()}
+            </p>
+
+            <p>
+                Muda: ${formatDuration(pkg.duration_minutes)}
+            </p>
+
+            <p class="small">
+                ${escapeHtml(pkg.description || "")}
+            </p>
+
+            <button class="btn"
+                onclick="buyPackage(${pkg.id})">
+                Nunua
+            </button>
+
+        `;
+
+        box.appendChild(div);
+
+    });
+}
+
+
+/* =========================================
+   VOUCHERS
+   ========================================= */
+
+async function loadVouchers(){
+
+    const {data:userData} =
+        await supabaseClient.auth.getUser();
+
+    const user=userData.user;
+
+    if(!user) return;
+
+    const {data,error} =
+        await supabaseClient
+        .from("vouchers")
+        .select(`
+            *,
+            packages(name)
+        `)
+        .eq("user_id",user.id)
+        .order("created_at",{ascending:false});
+
+    const box=
+        document.getElementById("vouchersList");
+
+    if(error){
+
+        box.innerHTML=
+            "<p>Imeshindikana kupakia vouchers.</p>";
+
+        return;
+    }
+
+    if(!data || data.length===0){
+
+        box.innerHTML=
+            "<p>Bado huna voucher.</p>";
+
+        return;
+    }
+
+    box.innerHTML="";
+
+    data.forEach(v=>{
+
+        const div=document.createElement("div");
+
+        div.className="package";
+
+        div.innerHTML=`
+
+            <h3>🎟️ ${escapeHtml(v.code)}</h3>
+
+            <p>
+                Package:
+                ${escapeHtml(v.packages?.name || "-")}
+            </p>
+
+            <p>
+                Status:
+                <strong>${escapeHtml(v.status)}</strong>
+            </p>
+
+        `;
+
+        box.appendChild(div);
+
+    });
+}
+
+
+/* =========================================
+   ADMIN
+   ========================================= */
+
+async function showAdminDashboard(){
+
+    document
+        .getElementById("customerDashboard")
+        .classList.add("hidden");
+
+    document
+        .getElementById("adminDashboard")
+        .classList.remove("hidden");
+
+    await loadAdminStats();
+    await loadAdminPackages();
+}
+
+
+async function loadAdminStats(){
+
+    const tables=[
+        ["profiles","customerCount"],
+        ["packages","packageCount"],
+        ["vouchers","voucherCount"],
+        ["payments","paymentCount"]
+    ];
+
+    for(const item of tables){
+
+        const {count,error} =
+            await supabaseClient
+            .from(item[0])
+            .select("*",{count:"exact",head:true});
+
+        if(!error){
+
+            document
+                .getElementById(item[1])
+                .innerText=count || 0;
+
+        }
+
+    }
+
+}
+
+
+async function loadAdminPackages(){
+
+    const {data,error} =
+        await supabaseClient
+        .from("packages")
+        .select("*")
+        .order("created_at",{ascending:false});
+
+    const box=
+        document.getElementById("adminPackages");
+
+    if(error){
+
+        box.innerHTML=
+            "<p>Imeshindikana kupakia packages.</p>";
+
+        return;
+    }
+
+    box.innerHTML="";
+
+    if(!data || data.length===0){
+
+        box.innerHTML=
+            "<p>Hakuna packages.</p>";
+
+        return;
+    }
+
+    data.forEach(pkg=>{
+
+        const div=document.createElement("div");
+
+        div.className="package";
+
+        div.innerHTML=`
+
+            <h3>${escapeHtml(pkg.name)}</h3>
+
+            <p>
+                TZS ${Number(pkg.price).toLocaleString()}
+            </p>
+
+            <p>
+                ${formatDuration(pkg.duration_minutes)}
+            </p>
+
+            <button
+                class="btn-danger"
+                onclick="deletePackage(${pkg.id})">
+                Delete
+            </button>
+
+        `;
+
+        box.appendChild(div);
+
+    });
+}
+
+
+async function addPackage(){
+
+    const name=
+        document.getElementById("packageName").value.trim();
+
+    const duration=
+        Number(
+            document.getElementById("packageDuration").value
+        );
+
+    const price=
+        Number(
+            document.getElementById("packagePrice").value
+        );
+
+    const description=
+        document
+        .getElementById("packageDescription")
+        .value.trim();
+
+    if(!name || !duration || !price){
+
+        alert("Jaza package name, duration na price.");
+        return;
+    }
+
+    const {error} =
+        await supabaseClient
+        .from("packages")
+        .insert({
+
+            name:name,
+            duration_minutes:duration,
+            price:price,
+            description:description
+
+        });
+
+    if(error){
+
+        alert(error.message);
+        return;
+    }
+
+    document.getElementById("packageName").value="";
+    document.getElementById("packageDuration").value="";
+    document.getElementById("packagePrice").value="";
+    document.getElementById("packageDescription").value="";
+
+    await loadAdminStats();
+    await loadAdminPackages();
+
+    alert("Package imeongezwa.");
+}
+
+
+async function deletePackage(id){
+
+    if(!confirm("Una uhakika unataka kufuta package hii?"))
+        return;
+
+    const {error} =
+        await supabaseClient
+        .from("packages")
+        .delete()
+        .eq("id",id);
+
+    if(error){
+
+        alert(error.message);
+        return;
+    }
+
+    await loadAdminStats();
+    await loadAdminPackages();
+}
+
+
+/* =========================================
+   BUY PACKAGE
+   ========================================= */
+
+function buyPackage(id){
+
+    alert(
+        "Payment system bado haijaunganishwa. " +
+        "Tutaiunganisha na mfumo wa malipo katika hatua inayofuata."
+    );
+
+}
+
+
+/* =========================================
+   LOGOUT
+   ========================================= */
+
+async function logout(){
+
+    await supabaseClient.auth.signOut();
+
+    document
+        .getElementById("logoutBtn")
+        .classList.add("hidden");
+
+    document
+        .getElementById("customerDashboard")
+        .classList.add("hidden");
+
+    document
+        .getElementById("adminDashboard")
+        .classList.add("hidden");
+
+    showAuth();
+
+}
+
+
+/* =========================================
+   AUTH SCREEN
+   ========================================= */
+
+function showAuth(){
+
+    document
+        .getElementById("authSection")
+        .classList.remove("hidden");
+
+    showLogin();
+
+}
+
+
+/* =========================================
+   HELPERS
+   ========================================= */
+
+function formatDuration(minutes){
+
+    if(minutes < 60)
+        return minutes + " minutes";
+
+    if(minutes < 1440)
+        return (minutes/60) + " hours";
+
+    return (minutes/1440) + " days";
+}
+
+
+function escapeHtml(value){
+
+    return String(value)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+}
+
+
+/* =========================================
+   START APP
+   ========================================= */
+
+supabaseClient.auth.onAuthStateChange(
+    async (event,session)=>{
+
+        if(session){
+
+            setTimeout(
+                ()=>loadUser(),
+                0
+            );
+
+        }else{
+
+            showAuth();
+
+        }
+
+    }
 );
 
-location.reload();
-
-}
-
-
-/* ================= SHOW APP ================= */
-
-function showApp(){
-
-document.getElementById(
-"loginPage"
-).style.display="none";
-
-document.getElementById(
-"app"
-).style.display="block";
-
-loadPackages();
-loadVouchers();
-}
-
-
-/* ================= PACKAGES ================= */
-
-let packages =
-JSON.parse(
-localStorage.getItem("wizzybonPackages")
-) || [
-
-{
-name:"Daily",
-duration:"24",
-unit:"Hours",
-price:1000
-},
-
-{
-name:"Weekly",
-duration:"7",
-unit:"Days",
-price:5000
-},
-
-{
-name:"Monthly",
-duration:"30",
-unit:"Days",
-price:15000
-}
-
-];
-
-
-function savePackages(){
-
-localStorage.setItem(
-"wizzybonPackages",
-JSON.stringify(packages)
-);
-
-}
-
-
-function addPackage(){
-
-const name =
-document.getElementById(
-"packageName"
-).value.trim();
-
-const duration =
-document.getElementById(
-"packageDuration"
-).value;
-
-const unit =
-document.getElementById(
-"packageUnit"
-).value;
-
-const price =
-document.getElementById(
-"packagePrice"
-).value;
-
-if(
-!name ||
-!duration ||
-!price
-){
-
-alert(
-"Jaza taarifa zote za package."
-);
-
-return;
-
-}
-
-
-packages.push({
-
-name:name,
-duration:duration,
-unit:unit,
-price:Number(price)
-
-});
-
-savePackages();
-
-document.getElementById(
-"packageName"
-).value="";
-
-document.getElementById(
-"packageDuration"
-).value="";
-
-document.getElementById(
-"packagePrice"
-).value="";
-
-loadPackages();
-
-alert(
-"Package imeongezwa successfully!"
-);
-
-}
-
-
-function deletePackage(index){
-
-if(
-confirm(
-"Unataka kufuta package hii?"
-)
-){
-
-packages.splice(index,1);
-
-savePackages();
-
-loadPackages();
-
-}
-
-}
-
-
-function loadPackages(){
-
-const list =
-document.getElementById(
-"packagesList"
-);
-
-const select =
-document.getElementById(
-"voucherPackage"
-);
-
-list.innerHTML="";
-
-select.innerHTML="";
-
-
-packages.forEach(
-(pkg,index)=>{
-
-list.innerHTML += `
-
-<div class="package">
-
-<h3>${pkg.name}</h3>
-
-<p>
-${pkg.duration} ${pkg.unit}
-</p>
-
-<div class="price">
-TZS ${Number(pkg.price).toLocaleString()}
-</div>
-
-<button
-class="delete"
-onclick="deletePackage(${index})">
-
-Delete
-
-</button>
-
-</div>
-
-`;
-
-
-select.innerHTML += `
-
-<option value="${index}">
-
-${pkg.name} -
-TZS ${Number(pkg.price).toLocaleString()}
-
-</option>
-
-`;
-
-});
-
-document.getElementById(
-"packageCount"
-).textContent =
-packages.length;
-
-}
-
-
-/* ================= VOUCHERS ================= */
-
-let vouchers =
-JSON.parse(
-localStorage.getItem("wizzybonVouchers")
-) || [];
-
-
-function saveVouchers(){
-
-localStorage.setItem(
-"wizzybonVouchers",
-JSON.stringify(vouchers)
-);
-
-}
-
-
-function randomVoucher(){
-
-const chars =
-"ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-
-let code="WZB-";
-
-for(
-let i=0;
-i<6;
-i++
-){
-
-code += chars.charAt(
-Math.floor(
-Math.random()*chars.length
-)
-);
-
-}
-
-return code;
-
-}
-
-
-function generateVouchers(){
-
-if(packages.length===0){
-
-alert(
-"Anza kwa kuongeza package."
-);
-
-return;
-
-}
-
-const packageIndex =
-Number(
-document.getElementById(
-"voucherPackage"
-).value
-);
-
-const amount =
-Number(
-document.getElementById(
-"voucherAmount"
-).value
-);
-
-const pkg =
-packages[packageIndex];
-
-
-for(
-let i=0;
-i<amount;
-i++
-){
-
-vouchers.push({
-
-code:randomVoucher(),
-
-package:pkg.name,
-
-price:pkg.price,
-
-status:"Active",
-
-created:new Date()
-.toLocaleDateString()
-
-});
-
-}
-
-saveVouchers();
-
-loadVouchers();
-
-alert(
-amount +
-" voucher(s) zimetengenezwa."
-);
-
-}
-
-
-function deleteVoucher(index){
-
-if(
-confirm(
-"Unataka kufuta voucher hii?"
-)
-){
-
-vouchers.splice(index,1);
-
-saveVouchers();
-
-loadVouchers();
-
-}
-
-}
-
-
-function loadVouchers(){
-
-const table =
-document.getElementById(
-"voucherTable"
-);
-
-table.innerHTML="";
-
-vouchers.forEach(
-(voucher,index)=>{
-
-table.innerHTML += `
-
-<tr>
-
-<td>
-<strong>
-${voucher.code}
-</strong>
-</td>
-
-<td>
-${voucher.package}
-</td>
-
-<td>
-TZS ${Number(
-voucher.price
-).toLocaleString()}
-</td>
-
-<td>
-
-<span class="status">
-${voucher.status}
-</span>
-
-</td>
-
-<td>
-
-<button
-class="delete"
-onclick="deleteVoucher(${index})">
-
-Delete
-
-</button>
-
-</td>
-
-</tr>
-
-`;
-
-});
-
-
-document.getElementById(
-"voucherCount"
-).textContent =
-vouchers.length;
-
-
-/* REVENUE */
-
-let total=0;
-
-vouchers.forEach(
-(v)=>{
-
-total += Number(v.price);
-
-});
-
-
-document.getElementById(
-"revenue"
-).textContent =
-"TZS " +
-total.toLocaleString();
-
-}
-
-
-/* ================= START ================= */
-
-if(
-localStorage.getItem(
-"wizzybonLoggedIn"
-)==="true"
-){
-
-showApp();
-
-}
+loadUser();
 
 </script>
 
