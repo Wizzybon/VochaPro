@@ -1155,13 +1155,15 @@ supabaseClient.auth.onAuthStateChange(
                 0
             );
 
-        }else{
+               }else{
 
             showAuth();
 
         }
 
     }
+);
+
 supabaseClient.auth.onAuthStateChange((event, session) => {
 
     if(event === "PASSWORD_RECOVERY"){
