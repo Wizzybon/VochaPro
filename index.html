@@ -1146,22 +1146,22 @@ function escapeHtml(value){
    ========================================= */
 
 supabaseClient.auth.onAuthStateChange(
-    async (event,session)=>{
+  async (event, session) => {
 
-        if(session){
-
-            setTimeout(
-                ()=>loadUser(),
-                0
-            );
-
-               }else{
-
-            showAuth();
-
-        }
-
+    if(event === "PASSWORD_RECOVERY"){
+      return;
     }
+
+    if(session){
+      setTimeout(
+        () => loadUser(),
+        0
+      );
+    }else{
+      showAuth();
+    }
+
+  }
 );
 
 supabaseClient.auth.onAuthStateChange((event, session) => {
