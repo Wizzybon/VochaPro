@@ -157,6 +157,12 @@ button{
 Login
 </button>
 
+    <p style="text-align:center; margin-top:12px;">
+  <a href="#" onclick="showForgotPassword(); return false;">
+    Umesahau Password?
+  </a>
+</p>
+    
 <p class="small">
 Tumia email na password uliyojisajili.
 </p>
@@ -188,6 +194,33 @@ Baada ya kujisajili unaweza kuhitajika kuthibitisha email yako.
 
 </div>
 
+    <!-- RESET PASSWORD -->
+<div id="resetPasswordForm" class="hidden">
+
+    <label>Password Mpya</label>
+    <input
+        type="password"
+        id="newPassword"
+        placeholder="Weka password mpya"
+    >
+
+    <label>Thibitisha Password</label>
+    <input
+        type="password"
+        id="confirmPassword"
+        placeholder="Rudia password mpya"
+    >
+
+    <button
+        class="btn"
+        style="width:100%"
+        onclick="updatePassword()"
+    >
+        Weka Password Mpya
+    </button>
+
+</div>
+    
 </div>
 </section>
 
@@ -437,7 +470,145 @@ async function login(){
 
 }
 
+/* =========================================
+   FORGOT PASSWORD
+   ========================================= */
 
+async function showForgotPassword(){
+
+    const email = prompt(
+        "Ingiza email yako ili utumiwe link ya kubadilisha password:"
+    );
+
+    if(!email){
+        return;
+    }
+
+    const cleanEmail = email.trim();
+
+    if(!cleanEmail){
+        alert("Tafadhali ingiza email yako.");
+        return;
+    }
+
+    try{
+
+        const { error } =
+            await supabaseClient.auth.resetPasswordForEmail(
+                cleanEmail,
+                {
+                    redirectTo: window.location.origin + window.location.pathname
+                }
+            );
+
+        if(error){
+
+            console.error("Password reset error:", error);
+
+            alert(
+                "Imeshindikana kutuma reset link.\n\n" +
+                error.message
+            );
+
+            return;
+        }
+
+        alert(
+            "Reset link imetumwa kwenye email yako.\n\n" +
+            "Fungua Gmail yako na bonyeza link hiyo."
+        );
+
+    }catch(error){
+
+        console.error("Password reset error:", error);
+
+        alert(
+            "Kuna tatizo wakati wa kutuma reset link."
+        );
+    }
+}
+
+    /* =========================================
+   UPDATE PASSWORD
+   ========================================= */
+
+async function updatePassword(){
+
+    const newPassword =
+        document.getElementById("newPassword").value;
+
+    const confirmPassword =
+        document.getElementById("confirmPassword").value;
+
+    if(!newPassword || !confirmPassword){
+
+        alert("Jaza password zote mbili.");
+
+        return;
+    }
+
+    if(newPassword.length < 6){
+
+        alert("Password iwe na angalau characters 6.");
+
+        return;
+    }
+
+    if(newPassword !== confirmPassword){
+
+        alert("Password hazifanani.");
+
+        return;
+    }
+
+    try{
+
+        const { error } =
+            await supabaseClient.auth.updateUser({
+                password:newPassword
+            });
+
+        if(error){
+
+            console.error("Update password error:", error);
+
+            alert(
+                "Imeshindikana kubadilisha password.\n\n" +
+                error.message
+            );
+
+            return;
+        }
+
+        alert(
+            "Password imebadilishwa kwa mafanikio!\n\n" +
+            "Sasa unaweza kutumia password mpya kuingia."
+        );
+
+        document
+            .getElementById("newPassword")
+            .value="";
+
+        document
+            .getElementById("confirmPassword")
+            .value="";
+
+        document
+            .getElementById("resetPasswordForm")
+            .classList.add("hidden");
+
+        showLogin();
+
+    }catch(error){
+
+        console.error("Update password error:", error);
+
+        alert(
+            "Kuna tatizo wakati wa kubadilisha password."
+        );
+    }
+}
+    
 /* =========================================
    CHECK USER
    ========================================= */
@@ -991,7 +1162,31 @@ supabaseClient.auth.onAuthStateChange(
         }
 
     }
-);
+supabaseClient.auth.onAuthStateChange((event, session) => {
+
+    if(event === "PASSWORD_RECOVERY"){
+
+        showAuth();
+
+        document
+            .getElementById("loginForm")
+            .classList.add("hidden");
+
+        document
+            .getElementById("signupForm")
+            .classList.add("hidden");
+
+        document
+            .getElementById("resetPasswordForm")
+            .classList.remove("hidden");
+
+        document
+            .getElementById("authTitle")
+            .textContent = "Weka Password Mpya";
+    }
+
+});
+    
 
 loadUser();
 
