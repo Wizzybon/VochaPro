@@ -847,15 +847,60 @@ async function deletePackage(id){
 /* =========================================
    BUY PACKAGE
    ========================================= */
+async function buyPackage(id) {
+  const phone = prompt(
+    "Ingiza namba ya simu utakayotumia kulipia:\nMfano: 0712345678"
+  );
 
-function buyPackage(id){
+  if (!phone) {
+    return;
+  }
 
-    alert(
-        "Payment system bado haijaunganishwa. " +
-        "Tutaiunganisha na mfumo wa malipo katika hatua inayofuata."
+  const cleanPhone = phone.trim();
+
+  if (!/^(\+255|255|0)\d{9}$/.test(cleanPhone)) {
+    alert("Tafadhali ingiza namba sahihi ya Tanzania.");
+    return;
+  }
+
+  try {
+    alert("Tafadhali subiri, tunaandaa ombi la malipo...");
+
+    const { data, error } = await supabaseClient.functions.invoke(
+      "create-payment",
+      {
+        body: {
+          package_id: Number(id),
+          phone: cleanPhone
+        }
+      }
     );
 
+    if (error) {
+      console.error("Payment error:", error);
+      alert("Imeshindikana kuanzisha malipo. Tafadhali jaribu tena.");
+      return;
+    }
+
+    if (!data || !data.success) {
+      alert(
+        data?.message ||
+        "Imeshindikana kuanzisha malipo."
+      );
+      return;
+    }
+
+    alert(
+      "Ombi la malipo limetumwa kwenye namba yako.\n\n" +
+      "Tafadhali fuata maelekezo kwenye simu yako na uthibitishe malipo."
+    );
+
+  } catch (error) {
+    console.error("Payment error:", error);
+    alert("Kuna tatizo wakati wa kuanzisha malipo.");
+  }
 }
+
 
 
 /* =========================================
