@@ -1148,49 +1148,44 @@ function escapeHtml(value){
 supabaseClient.auth.onAuthStateChange(
   async (event, session) => {
 
-    if(event === "PASSWORD_RECOVERY"){
+    if (event === "PASSWORD_RECOVERY") {
+
+      showAuth();
+
+      document
+        .getElementById("loginForm")
+        .classList.add("hidden");
+
+      document
+        .getElementById("signupForm")
+        .classList.add("hidden");
+
+      document
+        .getElementById("resetPasswordForm")
+        .classList.remove("hidden");
+
+      document
+        .getElementById("authTitle")
+        .textContent = "Weka Password Mpya";
+
       return;
     }
 
-    if(session){
+    if (session) {
+
       setTimeout(
         () => loadUser(),
         0
       );
-    }else{
+
+    } else {
+
       showAuth();
+
     }
 
   }
 );
-
-supabaseClient.auth.onAuthStateChange((event, session) => {
-
-    if(event === "PASSWORD_RECOVERY"){
-
-        showAuth();
-
-        document
-            .getElementById("loginForm")
-            .classList.add("hidden");
-
-        document
-            .getElementById("signupForm")
-            .classList.add("hidden");
-
-        document
-            .getElementById("resetPasswordForm")
-            .classList.remove("hidden");
-
-        document
-            .getElementById("authTitle")
-            .textContent = "Weka Password Mpya";
-    }
-
-});
-    
-
-loadUser();
 
 </script>
 
